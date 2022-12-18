@@ -127,7 +127,7 @@ shader RandomTilingBitmap
   output color outDisp   = 0     [[ string label="Displacement"   ]],
 )
 {
-	point p = Pos  / Scale;		
+	point p = Pos / Scale;		
 	point noisepoint = p / RandScale / 2;
 	float E = 20/EdgeFuzz;	
 	
@@ -174,62 +174,21 @@ shader RandomTilingBitmap
 	point p4 = rotate(p, rotation4, 0.0, vector(0.0,0.0,1.0))/mix(ScaleMin, ScaleMax, pow(rotscale4[1],ScaleCurve))+point(position4[0] * UOffset, position4[1] * VOffset, 0.0);
 
 	// Import Albedo
-	color Col1       = texture(Albedo,    p1[0], 1.0 - p1[1], "wrap", WrapMode, "missingalpha", 1);
-	color Col2       = texture(Albedo,    p2[0], 1.0 - p2[1], "wrap", WrapMode, "missingalpha", 1);
-	color Col3       = texture(Albedo,    p3[0], 1.0 - p3[1], "wrap", WrapMode, "missingalpha", 1);
-	color Col4       = texture(Albedo,    p4[0], 1.0 - p4[1], "wrap", WrapMode, "missingalpha", 1);
-	
-	// Import Metalness
-	color Metal1	 = texture(Metalness, p1[0], 1.0 - p1[1], "wrap", WrapMode, "missingalpha", 1);
-	color Metal2	 = texture(Metalness, p2[0], 1.0 - p2[1], "wrap", WrapMode, "missingalpha", 1);
-	color Metal3	 = texture(Metalness, p3[0], 1.0 - p3[1], "wrap", WrapMode, "missingalpha", 1);
-	color Metal4     = texture(Metalness, p4[0], 1.0 - p4[1], "wrap", WrapMode, "missingalpha", 1);
-	
-	// Import Roughness
-	color Rough1     = texture(Roughness, p1[0], 1.0 - p1[1], "wrap", WrapMode, "missingalpha", 1);
-	color Rough2     = texture(Roughness, p2[0], 1.0 - p2[1], "wrap", WrapMode, "missingalpha", 1);
-	color Rough3     = texture(Roughness, p3[0], 1.0 - p3[1], "wrap", WrapMode, "missingalpha", 1);
-	color Rough4     = texture(Roughness, p4[0], 1.0 - p4[1], "wrap", WrapMode, "missingalpha", 1);
-		
-	// Import AO
-	color AO1        = texture(AO,        p1[0], 1.0 - p1[1], "wrap", WrapMode, "missingalpha", 1);
-	color AO2        = texture(AO,        p2[0], 1.0 - p2[1], "wrap", WrapMode, "missingalpha", 1);
-	color AO3        = texture(AO,        p3[0], 1.0 - p3[1], "wrap", WrapMode, "missingalpha", 1);
-	color AO4        = texture(AO,        p4[0], 1.0 - p4[1], "wrap", WrapMode, "missingalpha", 1);
-	
-	// Import Normal
-	color Norm1      = texture(Normal,    p1[0], 1.0 - p1[1], "wrap", WrapMode, "missingalpha", 1);
-	color Norm2      = texture(Normal,    p2[0], 1.0 - p2[1], "wrap", WrapMode, "missingalpha", 1);
-	color Norm3      = texture(Normal,    p3[0], 1.0 - p3[1], "wrap", WrapMode, "missingalpha", 1);
-	color Norm4      = texture(Normal,    p4[0], 1.0 - p4[1], "wrap", WrapMode, "missingalpha", 1);
-	
-	// Import Emission
-	color Emit1      = texture(Metalness, p1[0], 1.0 - p1[1], "wrap", WrapMode, "missingalpha", 1);
-	color Emit2      = texture(Metalness, p2[0], 1.0 - p2[1], "wrap", WrapMode, "missingalpha", 1);
-	color Emit3      = texture(Metalness, p3[0], 1.0 - p3[1], "wrap", WrapMode, "missingalpha", 1);
-	color Emit4      = texture(Metalness, p4[0], 1.0 - p4[1], "wrap", WrapMode, "missingalpha", 1);
-	
-	// Import Opacity
-	color Opac1      = texture(Opacity,   p1[0], 1.0 - p1[1], "wrap", WrapMode, "missingalpha", 1);
-	color Opac2      = texture(Opacity,   p2[0], 1.0 - p2[1], "wrap", WrapMode, "missingalpha", 1);
-	color Opac3      = texture(Opacity,   p3[0], 1.0 - p3[1], "wrap", WrapMode, "missingalpha", 1);
-	color Opac4      = texture(Opacity,   p4[0], 1.0 - p4[1], "wrap", WrapMode, "missingalpha", 1);
-	
-	// Import Albedo
-	color Disp1      = texture(Displace,  p1[0], 1.0 - p1[1], "wrap", WrapMode, "missingalpha", 1);
-	color Disp2      = texture(Displace,  p2[0], 1.0 - p2[1], "wrap", WrapMode, "missingalpha", 1);
-	color Disp3      = texture(Displace,  p3[0], 1.0 - p3[1], "wrap", WrapMode, "missingalpha", 1);
-	color Disp4      = texture(Displace,  p4[0], 1.0 - p4[1], "wrap", WrapMode, "missingalpha", 1);
+	if (Albedo != ""){
+		color Col1 = texture(Albedo, p1[0], 1.0 - p1[1], "wrap", WrapMode, "missingalpha", 1);
+		color Col2 = texture(Albedo, p2[0], 1.0 - p2[1], "wrap", WrapMode, "missingalpha", 1);
+		color Col3 = texture(Albedo, p3[0], 1.0 - p3[1], "wrap", WrapMode, "missingalpha", 1);
+		color Col4 = texture(Albedo, p4[0], 1.0 - p4[1], "wrap", WrapMode, "missingalpha", 1);
 		
 	// HSV Albedo transform
 	color hsv1 = transformc("rgb", "hsv", Col1); hsv1[0] += hsvTweak1[0]; hsv1[2] *= hsvTweak1[2];
 	color hsv2 = transformc("rgb", "hsv", Col2); hsv2[0] += hsvTweak2[0]; hsv2[2] *= hsvTweak2[2];
 	color hsv3 = transformc("rgb", "hsv", Col3); hsv3[0] += hsvTweak3[0]; hsv3[2] *= hsvTweak3[2];
 	color hsv4 = transformc("rgb", "hsv", Col4); hsv4[0] += hsvTweak4[0]; hsv4[2] *= hsvTweak4[2];	
-	Col1       = transformc("hsv", "rgb", hsv1); Col1 = pow(Col1, hsvTweak1[1]); 		
-	Col2       = transformc("hsv", "rgb", hsv2); Col2 = pow(Col2, hsvTweak2[1]); 		
-	Col3       = transformc("hsv", "rgb", hsv3); Col3 = pow(Col3, hsvTweak3[1]); 		
-	Col4       = transformc("hsv", "rgb", hsv4); Col4 = pow(Col4, hsvTweak4[1]); 
+	Col1 = transformc("hsv", "rgb", hsv1); Col1 = pow(Col1, hsvTweak1[1]); 		
+	Col2 = transformc("hsv", "rgb", hsv2); Col2 = pow(Col2, hsvTweak2[1]); 		
+	Col3 = transformc("hsv", "rgb", hsv3); Col3 = pow(Col3, hsvTweak3[1]); 		
+	Col4 = transformc("hsv", "rgb", hsv4); Col4 = pow(Col4, hsvTweak4[1]); 
 	
 	// Albedo Gamma
 	if (AutoGamma)
@@ -256,30 +215,86 @@ shader RandomTilingBitmap
 				Col3 = pow(Col3, ManualGamma);
 				Col4 = pow(Col4, ManualGamma);
 		}
-	
-	if (ScaleMult)
-	{
-		// Scale displacement map		
-		Disp1 *= mix(ScaleMin, ScaleMax, pow(rotscale1[1],ScaleCurve))/ScaleMax;
-		Disp2 *= mix(ScaleMin, ScaleMax, pow(rotscale2[1],ScaleCurve))/ScaleMax;
-		Disp3 *= mix(ScaleMin, ScaleMax, pow(rotscale3[1],ScaleCurve))/ScaleMax;
-		Disp4 *= mix(ScaleMin, ScaleMax, pow(rotscale4[1],ScaleCurve))/ScaleMax;
 		
-		// Scale normal map
-		Norm1 = mix(color(.5,.5,1), Norm1, pow(rotscale1[1],ScaleCurve));
-		Norm2 = mix(color(.5,.5,1), Norm2, pow(rotscale2[1],ScaleCurve));
-		Norm3 = mix(color(.5,.5,1), Norm3, pow(rotscale3[1],ScaleCurve));
-		Norm4 = mix(color(.5,.5,1), Norm4, pow(rotscale4[1],ScaleCurve));	
-			
+	Col1 = mix(Col1,Col2,1-mask1); Col3=mix(Col3,Col4,1-mask1); outAlbedo=mix(Col1,Col3,1-mask2);
 	}
 	
-	Col1   = mix(Col1,Col2,    1-mask1); Col3   = mix(Col3,Col4,    1-mask1);     outAlbedo = mix(Col1,Col3,    1-mask2);	
-	Metal1 = mix(Metal1,Metal2,1-mask1); Metal3 = mix(Metal3,Metal4,1-mask1);     outMetal  = mix(Metal1,Metal3,1-mask2);
-	Rough1 = mix(Rough1,Rough2,1-mask1); Rough3 = mix(Rough3,Rough4,1-mask1);     outRough  = mix(Rough1,Rough3,1-mask2);	
-	AO1    = mix(AO1,AO2,      1-mask1); AO3    = mix(AO3,AO4,      1-mask1);     outAO     = mix(AO1,AO3,      1-mask2);
-	Norm1  = mix(Norm1,Norm2,  1-mask1); Norm3  = mix(Norm3,Norm4,  1-mask1);     outNorm   = mix(Norm1,Norm3,  1-mask2);	
-	Emit1  = mix(Emit1,Emit2,  1-mask1); Emit3  = mix(Emit3,Emit4,  1-mask1);     outEmit   = mix(Emit1,Emit3,  1-mask2);
-	Opac1  = mix(Opac1,Opac2,  1-mask1); Opac3  = mix(Opac3,Opac4,  1-mask1);     outOpac   = mix(Opac1,Opac3,  1-mask2);	
-	Disp1  = mix(Disp1,Disp2,  1-mask1); Disp3  = mix(Disp3,Disp4,  1-mask1);     outDisp   = mix(Disp1,Disp3,  1-mask2);
-			
+	if (Metalness != ""){
+		// Import Metalness
+		color Metal1 = texture(Metalness, p1[0], 1.0 - p1[1], "wrap", WrapMode, "missingalpha", 1);
+		color Metal2 = texture(Metalness, p2[0], 1.0 - p2[1], "wrap", WrapMode, "missingalpha", 1);
+		color Metal3 = texture(Metalness, p3[0], 1.0 - p3[1], "wrap", WrapMode, "missingalpha", 1);
+		color Metal4 = texture(Metalness, p4[0], 1.0 - p4[1], "wrap", WrapMode, "missingalpha", 1);
+		Metal1 = mix(Metal1,Metal2,1-mask1); Metal3 = mix(Metal3,Metal4,1-mask1); outMetal = mix(Metal1,Metal3,1-mask2);
+	}
+	
+	if (Roughness != ""){
+		// Import Roughness
+		color Rough1 = texture(Roughness, p1[0], 1.0 - p1[1], "wrap", WrapMode, "missingalpha", 1);
+		color Rough2 = texture(Roughness, p2[0], 1.0 - p2[1], "wrap", WrapMode, "missingalpha", 1);
+		color Rough3 = texture(Roughness, p3[0], 1.0 - p3[1], "wrap", WrapMode, "missingalpha", 1);
+		color Rough4 = texture(Roughness, p4[0], 1.0 - p4[1], "wrap", WrapMode, "missingalpha", 1);
+		Rough1 = mix(Rough1,Rough2,1-mask1); Rough3 = mix(Rough3,Rough4,1-mask1); outRough = mix(Rough1,Rough3,1-mask2);	
+	}
+	
+	if (AO != ""){
+		// Import AO
+		color AO1 = texture(AO, p1[0], 1.0 - p1[1], "wrap", WrapMode, "missingalpha", 1);
+		color AO2 = texture(AO, p2[0], 1.0 - p2[1], "wrap", WrapMode, "missingalpha", 1);
+		color AO3 = texture(AO, p3[0], 1.0 - p3[1], "wrap", WrapMode, "missingalpha", 1);
+		color AO4 = texture(AO, p4[0], 1.0 - p4[1], "wrap", WrapMode, "missingalpha", 1);	
+		AO1 = mix(AO1,AO2,1-mask1); AO3 = mix(AO3,AO4,1-mask1); outAO = mix(AO1,AO3,1-mask2);
+	}
+	
+	if (Emission != ""){
+		// Import Emission
+		color Emit1 = texture(Metalness, p1[0], 1.0 - p1[1], "wrap", WrapMode, "missingalpha", 1);
+		color Emit2 = texture(Metalness, p2[0], 1.0 - p2[1], "wrap", WrapMode, "missingalpha", 1);
+		color Emit3 = texture(Metalness, p3[0], 1.0 - p3[1], "wrap", WrapMode, "missingalpha", 1);
+		color Emit4 = texture(Metalness, p4[0], 1.0 - p4[1], "wrap", WrapMode, "missingalpha", 1);
+		Emit1  = mix(Emit1,Emit2,  1-mask1); Emit3 = mix(Emit3,Emit4, 1-mask1); outEmit = mix(Emit1,Emit3,  1-mask2);
+	}
+	
+	if (Opacity != ""){
+		// Import Opacity
+		color Opac1 = texture(Opacity, p1[0], 1.0 - p1[1], "wrap", WrapMode, "missingalpha", 1);
+		color Opac2 = texture(Opacity, p2[0], 1.0 - p2[1], "wrap", WrapMode, "missingalpha", 1);
+		color Opac3 = texture(Opacity, p3[0], 1.0 - p3[1], "wrap", WrapMode, "missingalpha", 1);
+		color Opac4 = texture(Opacity, p4[0], 1.0 - p4[1], "wrap", WrapMode, "missingalpha", 1);
+		Opac1  = mix(Opac1,Opac2, 1-mask1); Opac3 = mix(Opac3,Opac4, 1-mask1); outOpac = mix(Opac1,Opac3,  1-mask2);
+	}
+	if (Displace != "") {
+		// Import Displacement
+		color Disp1 = texture(Displace, p1[0], 1.0 - p1[1], "wrap", WrapMode, "missingalpha", 1);
+		color Disp2 = texture(Displace, p2[0], 1.0 - p2[1], "wrap", WrapMode, "missingalpha", 1);
+		color Disp3 = texture(Displace, p3[0], 1.0 - p3[1], "wrap", WrapMode, "missingalpha", 1);
+		color Disp4 = texture(Displace, p4[0], 1.0 - p4[1], "wrap", WrapMode, "missingalpha", 1);
+		
+		// Scale displacement map	
+		if (ScaleMult)	{				
+			Disp1 *= mix(ScaleMin, ScaleMax, pow(rotscale1[1],ScaleCurve))/ScaleMax;
+			Disp2 *= mix(ScaleMin, ScaleMax, pow(rotscale2[1],ScaleCurve))/ScaleMax;
+			Disp3 *= mix(ScaleMin, ScaleMax, pow(rotscale3[1],ScaleCurve))/ScaleMax;
+			Disp4 *= mix(ScaleMin, ScaleMax, pow(rotscale4[1],ScaleCurve))/ScaleMax;
+		}
+		Disp1=mix(Disp1,Disp2,1-mask1); Disp3 = mix(Disp3,Disp4,1-mask1); outDisp=mix(Disp1,Disp3,1-mask2);
+	}
+	
+	if (Normal != "") {
+		// Import Normal
+		color Norm1 = texture(Normal, p1[0], 1.0 - p1[1], "wrap", WrapMode, "missingalpha", 1);
+		color Norm2 = texture(Normal, p2[0], 1.0 - p2[1], "wrap", WrapMode, "missingalpha", 1);
+		color Norm3 = texture(Normal, p3[0], 1.0 - p3[1], "wrap", WrapMode, "missingalpha", 1);
+		color Norm4 = texture(Normal, p4[0], 1.0 - p4[1], "wrap", WrapMode, "missingalpha", 1);
+		
+		// Scale normal map
+		if (ScaleMult)	{			
+			Norm1 = mix(color(.5,.5,1), Norm1, pow(rotscale1[1],ScaleCurve));
+			Norm2 = mix(color(.5,.5,1), Norm2, pow(rotscale2[1],ScaleCurve));
+			Norm3 = mix(color(.5,.5,1), Norm3, pow(rotscale3[1],ScaleCurve));
+			Norm4 = mix(color(.5,.5,1), Norm4, pow(rotscale4[1],ScaleCurve));
+		}	
+		Norm1=mix(Norm1,Norm2,1-mask1); Norm3=mix(Norm3,Norm4,1-mask1); outNorm=mix(Norm1,Norm3,1-mask2);	
+
+	}			
 }
